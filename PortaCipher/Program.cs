@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Specialized;
+using System.Text;
 
 namespace PortaCipher
 {
@@ -179,12 +180,12 @@ namespace PortaCipher
     }
     internal static class Global
     {
-        public static string Plaintext { get; set; } = default!;      // открытый текст
-        public static string EncryptedText { get; set; } = default!; // зашифрованный текст
-        public static string Key { get; set; } = default!;           // ключ
-        public static string Slogan { get; set; } = default!;        // лозунг
+        public static string Plaintext { get; set; } = string.Empty;      // открытый текст
+        public static string EncryptedText { get; set; } = string.Empty;  // зашифрованный текст
+        public static string Key { get; set; } = string.Empty;            // ключ
+        public static string Slogan { get; set; } = string.Empty;         // лозунг
 
-        public static string[,] table = new string[33, 33];           // таблица
+        public static string[,] table = new string[33, 33];               // таблица
     }
 
     internal static class Menu
