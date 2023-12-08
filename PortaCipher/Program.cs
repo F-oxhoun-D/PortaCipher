@@ -36,47 +36,60 @@ namespace PortaCipher
 
     internal static class EncryptPort
     {
-        static readonly string[] separator = { " ", ",", ".", "-" };    // массив разделителей
-        static string consoleText = "";                                 // переменная для работы с консолью(для чтения)
         public static void Encrypt()
         {
-            Console.WriteLine("Введите фразу:");
-            consoleText = Console.ReadLine() ?? "";
-            if (consoleText != "")
+            string[] separator = { " ", ",", ".", "-" };    // массив разделителей
+            string consoleText = string.Empty;              // переменная для работы с консолью(для чтения)
+            while (consoleText == string.Empty)
             {
-                string[] plaintext = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                Global.Plaintext = string.Join("", plaintext);
+                Console.WriteLine("Введите фразу:");
+                consoleText = Console.ReadLine() ?? string.Empty;
+                if (consoleText != string.Empty)
+                {
+                    string[] plaintext = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    Global.Plaintext = string.Join("", plaintext);
+                }
             }
-            Console.WriteLine("Введите ключ:");
-            consoleText = Console.ReadLine() ?? "";
-            if (consoleText != "")
+            consoleText = string.Empty;
+            while (consoleText == string.Empty)
             {
-                string[] key = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                Global.Key = string.Join("", key);
+                Console.WriteLine("Введите ключ:");
+                consoleText = Console.ReadLine() ?? string.Empty;
+                if (consoleText != string.Empty)
+                {
+                    string[] key = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    Global.Key = string.Join("", key);
+                    break;
+                }
             }
-            Console.WriteLine("Введите лозунг:");
-            consoleText = Console.ReadLine() ?? "";
-            if (consoleText != "")
+            consoleText = string.Empty;
+            while (consoleText == string.Empty)
             {
-                string[] slogan = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
-                Global.Slogan = string.Join("", slogan);
+                Console.WriteLine("Введите лозунг:");
+                consoleText = Console.ReadLine() ?? string.Empty;
+                if (consoleText != string.Empty)
+                {
+                    string[] slogan = consoleText.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                    Global.Slogan = string.Join("", slogan);
+                    break;
+                }
             }
+
             AlgoritmPort.PortaCipher();
 
         }
     }
     internal static class AlgoritmPort
     {
-        static readonly char[] plaintext = Global.Plaintext.ToCharArray();
-        static readonly char[] key = Global.Key.ToCharArray();
-        static string encryptedText = string.Empty;
-        static readonly int[] rowItems = new int[plaintext.Length];       // номера строк, где будут присутствовать буквы ключа
-        static readonly int[] colItems = new int[plaintext.Length];        // номера столбцов, где находятся буквы текста
-
         internal static void PortaCipher()
         {
-            CreateTable();
-            GetKey();
+            char[] plaintext = Global.Plaintext.ToCharArray();
+            char[] key = Global.Key.ToCharArray();
+            string encryptedText = string.Empty;
+            int[] rowItems = new int[plaintext.Length];       // номера строк, где будут присутствовать буквы ключа
+            int[] colItems = new int[plaintext.Length];        // номера столбцов, где находятся буквы текста
+            CreateTable(rowItems, colItems, plaintext, key);
+            GetKey(plaintext, key, rowItems);
 
             for (int i = 0; i < plaintext.Length; i++)
             {
@@ -85,7 +98,7 @@ namespace PortaCipher
             Global.EncryptedText = encryptedText;
             Console.WriteLine("Зашифрованная фраза: " + encryptedText);
         }
-        internal static void CreateTable()              // создание таблицы
+        internal static void CreateTable(int[] rowItems, int[] colItems, char[] plaintext, char[] key) // создание таблицы
         {
             const string path = "alphabet.txt";
             string content = File.ReadAllText(path);    // считываем алфавит
@@ -142,7 +155,7 @@ namespace PortaCipher
             }
         }
 
-        static void GetKey()
+        static void GetKey(char[] plaintext, char[] key, int[] rowItems)
         {
             string extendedKey = string.Empty;              // расширенный ключ
             int m = plaintext.Length / key.Length;          // сколько полных ключей запишется над фразой 
